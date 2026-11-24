@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DKV Tools — Lengkapi Profil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/login.css">
+</head>
+<body class="auth-body">
+
+<div class="auth-wrap" style="max-width: 500px;">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <img src="img/logo.png" alt="Logo Sekolah" class="school-logo" style="width:44px;height:44px;">
+      <div class="logo-text" style="text-align:left;">
+        <span class="brand">DKV Tools</span>
+        <span class="school">Lengkapi Data</span>
+      </div>
+    </div>
+    <h1 class="auth-title">Lengkapi Profil</h1>
+    <p class="auth-sub">Sebelum melakukan booking, isi data diri kamu dulu ya.</p>
+
+    <form id="profilForm" class="auth-form">
+      <div class="field">
+        <label>Nama Lengkap</label>
+        <input type="text" name="nama" id="profilNama" placeholder="Contoh: Rani Pratama" required>
+      </div>
+      <div class="field">
+        <label>Kelas</label>
+        <input type="text" name="kelas" id="profilKelas" placeholder="Contoh: XI DKV 2" required>
+      </div>
+      <div class="field">
+        <label>No. HP (Opsional)</label>
+        <input type="tel" name="hp" id="profilHp" placeholder="0812xxxx">
+      </div>
+      <button type="submit" class="btn btn-primary auth-submit">Simpan & Lanjutkan</button>
+    </form>
+  </div>
+</div>
+
+<script src="js/login.js"></script>
+<script>
+  // Pastikan sudah login sebagai siswa
+  const s = getSession();
+  if (!s || s.role !== 'siswa') location.replace('login.html');
+  
+  // Jika sudah lengkap, langsung ke index
+  if (s.profilLengkap) location.replace('index.html');
+
+  // Isi form jika ada data lama
+  if (s.nama !== 'Rani Pratama') document.getElementById('profilNama').value = s.nama || '';
+  if (s.kelas) document.getElementById('profilKelas').value = s.kelas || '';
+
+  document.getElementById('profilForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const nama = document.getElementById('profilNama').value.trim();
+    const kelas = document.getElementById('profilKelas').value.trim();
+    const hp = document.getElementById('profilHp').value.trim();
+
+    // Update session
+    s.nama = nama;
+    s.kelas = kelas;
+    s.hp = hp;
+    s.profilLengkap = true;
+    setSession(s);
+
+    location.replace('index.html');
+  });
+</script>
+</body>
+</html>
